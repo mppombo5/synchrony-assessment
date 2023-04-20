@@ -15,7 +15,7 @@ import jakarta.persistence.Id;
  * endpoints are created for changing account info.
  */
 @Entity
-public class User {
+public class ApiUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -25,14 +25,16 @@ public class User {
     private String firstName;
     private String lastName;
 
-    protected User() { }
+    protected ApiUser() { }
 
-    public User(String username, String passwordHash, String firstName, String lastName) {
+    public ApiUser(String username, String passwordHash, String firstName, String lastName) {
         this.username = username;
+        // TODO: hash password
         this.passwordHash = passwordHash;
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
 
     @Override
     public String toString() {
