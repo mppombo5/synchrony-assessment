@@ -1,5 +1,6 @@
 package me.mppombo.synchronyapi.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,16 +22,17 @@ public class ApiUser {
     private Long id;
 
     private String username;
-    private String passwordHash;
+    @JsonIgnore
+    private String password;
     private String firstName;
     private String lastName;
 
     protected ApiUser() { }
 
-    public ApiUser(String username, String passwordHash, String firstName, String lastName) {
+    public ApiUser(String username, String password, String firstName, String lastName) {
         this.username = username;
         // TODO: hash password
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -50,8 +52,8 @@ public class ApiUser {
         return username;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
     public String getFirstName() {
