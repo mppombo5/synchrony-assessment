@@ -9,11 +9,10 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 public class ApiUserController {
     private final static Logger logger = LoggerFactory.getLogger(ApiUserController.class);
+
     private final ApiUserService service;
 
     public ApiUserController(ApiUserService service) {
@@ -38,8 +37,8 @@ public class ApiUserController {
 
     // Register new user
     @PostMapping("/register")
-      public ResponseEntity<?> createUser(@RequestBody ApiUser newUser) {
-        logger.info(String.format("Request to register new user: %s", newUser.toString()));
+    public ResponseEntity<?> createUser(@RequestBody ApiUser newUser) {
+        logger.info(String.format("Request to register new user '%s'", newUser.getUsername()));
         return service.registerNewUser(newUser);
     }
 }
