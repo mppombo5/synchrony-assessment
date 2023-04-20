@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.springframework.hateoas.server.core.Relation;
 
 /*
  * Represents a registered user of the API. Contains "basic information", username, and password.
@@ -16,6 +17,7 @@ import jakarta.persistence.Id;
  * endpoints are created for changing account info.
  */
 @Entity
+@Relation(itemRelation = "user", collectionRelation = "users")
 public class ApiUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
