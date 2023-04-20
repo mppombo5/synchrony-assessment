@@ -4,7 +4,9 @@ import me.mppombo.synchronyapi.domain.ApiUser;
 import me.mppombo.synchronyapi.service.ApiUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +23,7 @@ public class ApiUserController {
 
     // Aggregate all registered users
     @GetMapping("/users")
-    List<ApiUser> getAllUsers() {
+    public CollectionModel<EntityModel<ApiUser>> getAllUsers() {
         logger.info("Processing request for aggregate information of all users");
         return service.getAllRegisteredUsers();
     }
@@ -29,14 +31,14 @@ public class ApiUserController {
     // Get a single user by ID
     // TODO: add searching function by username/last name
     @GetMapping("/users/{id}")
-    ApiUser getOneUser(@PathVariable Long id) {
+    public EntityModel<ApiUser> getOneUser(@PathVariable Long id) {
         logger.info(String.format("Processing request for user data with ID %d", id));
         return service.getSingleUser(id);
     }
 
     // Register new user
     @PostMapping("/register")
-    ApiUser createUser(@RequestBody ApiUser newUser) {
+      public ResponseEntity<?> createUser(@RequestBody ApiUser newUser) {
         logger.info(String.format("Request to register new user: %s", newUser.toString()));
         return service.registerNewUser(newUser);
     }
