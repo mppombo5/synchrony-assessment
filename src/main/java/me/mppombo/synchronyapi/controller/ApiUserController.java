@@ -1,6 +1,6 @@
 package me.mppombo.synchronyapi.controller;
 
-import me.mppombo.synchronyapi.domain.ApiUser;
+import me.mppombo.synchronyapi.models.ApiUser;
 import me.mppombo.synchronyapi.service.ApiUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

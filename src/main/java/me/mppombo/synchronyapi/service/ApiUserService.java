@@ -2,7 +2,7 @@ package me.mppombo.synchronyapi.service;
 
 import me.mppombo.synchronyapi.utility.assembler.ApiUserModelAssembler;
 import me.mppombo.synchronyapi.controller.ApiUserController;
-import me.mppombo.synchronyapi.domain.ApiUser;
+import me.mppombo.synchronyapi.models.ApiUser;
 import me.mppombo.synchronyapi.repository.ApiUserRepository;
 import me.mppombo.synchronyapi.utility.assembler.ErrorUserExistsModelAssembler;
 import me.mppombo.synchronyapi.utility.assembler.ErrorUserNotFoundModelAssembler;
@@ -55,6 +55,8 @@ public class ApiUserService {
             EntityModel<ErrorUserNotFoundBody> notFoundModel = errorUserNotFoundModelAssembler.toModel(notFoundBody);
             return ResponseEntity.status(notFoundBody.getStatus()).body(notFoundModel);
         }
+
+        logger.info(String.format("Found %s", user.get()));
         EntityModel<ApiUser> foundUserModel = userModelAssembler.toModel(user.get());
         return ResponseEntity.ok(foundUserModel);
     }

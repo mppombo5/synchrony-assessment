@@ -1,7 +1,7 @@
 package me.mppombo.synchronyapi.utility.assembler;
 
 import me.mppombo.synchronyapi.controller.ApiUserController;
-import me.mppombo.synchronyapi.domain.ApiUser;
+import me.mppombo.synchronyapi.models.ApiUser;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;

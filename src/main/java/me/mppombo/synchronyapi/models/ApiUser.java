@@ -1,4 +1,4 @@
-package me.mppombo.synchronyapi.domain;
+package me.mppombo.synchronyapi.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
