@@ -19,7 +19,7 @@ public class ImgurDeleteForbiddenErrorBody {
 
     public ImgurDeleteForbiddenErrorBody(String deletehash) {
         this.deletehash = deletehash;
-        this.message = String.format("unable to delete image with deletehash '%s'. you might not have permission, or it might not exist.", deletehash);
+        this.message = String.format("unable to delete image with deletehash '%s' from Imgur. you might not have permission, or it might not exist.", deletehash);
     }
 
 

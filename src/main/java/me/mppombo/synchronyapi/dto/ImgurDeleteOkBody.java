@@ -1,4 +1,4 @@
-package me.mppombo.synchronyapi.models;
+package me.mppombo.synchronyapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -7,4 +7,4 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * Unlike the responses for GET and POST requests, the 'data' field is not an object but rather a boolean value.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record ImgDeleteOkBody(boolean success, int status, boolean data) { }
+public record ImgurDeleteOkBody(boolean success, int status, boolean data) { }

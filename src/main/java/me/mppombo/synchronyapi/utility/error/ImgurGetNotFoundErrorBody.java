@@ -14,7 +14,7 @@ public class ImgurGetNotFoundErrorBody {
 
     public ImgurGetNotFoundErrorBody(String imgHash) {
         this.imgHash = imgHash;
-        this.message = String.format("image with imgHash '%s' not found", imgHash);
+        this.message = String.format("image with imgHash='%s' not found on Imgur", imgHash);
     }
 
 
