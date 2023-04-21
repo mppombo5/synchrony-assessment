@@ -4,10 +4,10 @@ import me.mppombo.synchronyapi.utility.assembler.ApiUserModelAssembler;
 import me.mppombo.synchronyapi.controller.ApiUserController;
 import me.mppombo.synchronyapi.models.ApiUser;
 import me.mppombo.synchronyapi.repository.ApiUserRepository;
-import me.mppombo.synchronyapi.utility.assembler.ErrorUserExistsModelAssembler;
-import me.mppombo.synchronyapi.utility.assembler.ErrorUserNotFoundModelAssembler;
-import me.mppombo.synchronyapi.utility.error.ErrorUserExistsBody;
-import me.mppombo.synchronyapi.utility.error.ErrorUserNotFoundBody;
+import me.mppombo.synchronyapi.utility.assembler.UserExistsErrorModelAssembler;
+import me.mppombo.synchronyapi.utility.assembler.UserNotFoundErrorModelAssembler;
+import me.mppombo.synchronyapi.utility.error.UserExistsErrorBody;
+import me.mppombo.synchronyapi.utility.error.UserNotFoundErrorBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.CollectionModel;
@@ -28,18 +28,18 @@ public class ApiUserService {
 
     private final ApiUserRepository repository;
     private final ApiUserModelAssembler userModelAssembler;
-    private final ErrorUserExistsModelAssembler errorUserExistsModelAssembler;
-    private final ErrorUserNotFoundModelAssembler errorUserNotFoundModelAssembler;
+    private final UserExistsErrorModelAssembler userExistsErrorModelAssembler;
+    private final UserNotFoundErrorModelAssembler userNotFoundErrorModelAssembler;
 
     public ApiUserService(
             ApiUserRepository repo,
             ApiUserModelAssembler userAssembler,
-            ErrorUserExistsModelAssembler userExistsAssembler,
-            ErrorUserNotFoundModelAssembler userNotFoundAssembler) {
+            UserExistsErrorModelAssembler userExistsAssembler,
+            UserNotFoundErrorModelAssembler userNotFoundAssembler) {
         this.repository = repo;
         this.userModelAssembler = userAssembler;
-        this.errorUserExistsModelAssembler = userExistsAssembler;
-        this.errorUserNotFoundModelAssembler = userNotFoundAssembler;
+        this.userExistsErrorModelAssembler = userExistsAssembler;
+        this.userNotFoundErrorModelAssembler = userNotFoundAssembler;
     }
 
 
@@ -51,8 +51,8 @@ public class ApiUserService {
         Optional<ApiUser> user = repository.findById(id);
         if (user.isEmpty()) {
             logger.info(String.format("Requested user with ID=%d does not exist, sending 404", id));
-            ErrorUserNotFoundBody notFoundBody = new ErrorUserNotFoundBody(id);
-            EntityModel<ErrorUserNotFoundBody> notFoundModel = errorUserNotFoundModelAssembler.toModel(notFoundBody);
+            UserNotFoundErrorBody notFoundBody = new UserNotFoundErrorBody(id);
+            EntityModel<UserNotFoundErrorBody> notFoundModel = userNotFoundErrorModelAssembler.toModel(notFoundBody);
             return ResponseEntity.status(notFoundBody.getStatus()).body(notFoundModel);
         }
 
@@ -77,8 +77,8 @@ public class ApiUserService {
         if (!sameUsernames.isEmpty()) {
             logger.info(String.format("User '%s' exists, sending 409", newUser.getUsername()));
             ApiUser existingUser = sameUsernames.get(0);
-            ErrorUserExistsBody userExistsBody = new ErrorUserExistsBody(existingUser.getId(), existingUser.getUsername());
-            EntityModel<ErrorUserExistsBody> userExistsModel = errorUserExistsModelAssembler.toModel(userExistsBody);
+            UserExistsErrorBody userExistsBody = new UserExistsErrorBody(existingUser.getId(), existingUser.getUsername());
+            EntityModel<UserExistsErrorBody> userExistsModel = userExistsErrorModelAssembler.toModel(userExistsBody);
             return ResponseEntity.status(userExistsBody.getStatus()).body(userExistsModel);
         }
 
