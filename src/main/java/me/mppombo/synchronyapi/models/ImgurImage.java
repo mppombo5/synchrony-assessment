@@ -9,7 +9,8 @@ import org.springframework.hateoas.server.core.Relation;
 /*
  * Represents an image which is uploaded by an ApiUser. Contains image information along with its owner.
  * Fields include:
- * - id (str, named imgurId)
+ * - apiUser (str, username of ApiUser who uploaded it)
+ * - imgurId (str)
  * - deletehash (str)
  * - link (str)
  * - title (nullable str)
@@ -23,6 +24,7 @@ public class ImgurImage {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String apiUser;
     private String imgurId;
     private String deletehash;
     private String link;
@@ -32,7 +34,14 @@ public class ImgurImage {
 
     protected ImgurImage() { }
 
-    public ImgurImage(String imgurId, String deletehash, String link, String title, String description, String type) {
+    public ImgurImage(String apiUser,
+                      String imgurId,
+                      String deletehash,
+                      String link,
+                      String title,
+                      String description,
+                      String type) {
+        this.apiUser = apiUser;
         this.imgurId = imgurId;
         this.deletehash = deletehash;
         this.link = link;
@@ -44,12 +53,16 @@ public class ImgurImage {
 
     @Override
     public String toString() {
-        return String.format("Image[id=%d, imgurId='%s', deletehash='%s', title='%s'",
-                id, imgurId, deletehash, title);
+        return String.format("Image[id=%d, apiUser='%s', imgurId='%s', deletehash='%s', title='%s'",
+                id, apiUser, imgurId, deletehash, title);
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getApiUser() {
+        return apiUser;
     }
 
     public String getImgurId() {
