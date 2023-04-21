@@ -1,7 +1,9 @@
 package me.mppombo.synchronyapi.service;
 
-import me.mppombo.synchronyapi.models.ImgViewResponse;
+import me.mppombo.synchronyapi.models.ImgDeleteOkBody;
+import me.mppombo.synchronyapi.models.ImgViewOkBody;
 import me.mppombo.synchronyapi.utility.error.GeneralErrorBody;
+import me.mppombo.synchronyapi.utility.error.ImgurDeleteForbiddenErrorBody;
 import me.mppombo.synchronyapi.utility.error.ImgurGetNotFoundErrorBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,23 +39,51 @@ public class ImgurService {
      */
     public ResponseEntity<?> getImgurImage(String imgHash) {
         try {
-            ImgViewResponse res = webClient.get()
+            ImgViewOkBody res = webClient.get()
                     .uri("/image/{imgHash}", imgHash)
                     .header(HttpHeaders.AUTHORIZATION, String.format("Client-ID %s", clientId))
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
-                    .bodyToMono(ImgViewResponse.class)
+                    .bodyToMono(ImgViewOkBody.class)
                     .block();
+            logger.info("Successfully GOT imgHash='{}'", imgHash);
             return ResponseEntity.ok(res);
         }
         catch (WebClientResponseException ex) {
             if (ex.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)) {
+                logger.info("404 Not Found for imgHash='{}'", imgHash);
                 ImgurGetNotFoundErrorBody nfBody = new ImgurGetNotFoundErrorBody(imgHash);
                 return ResponseEntity.status(nfBody.getStatus()).body(nfBody);
             }
-            int statusCode = ex.getStatusCode().value();
-            GeneralErrorBody errorBody = new GeneralErrorBody(statusCode, ex.getStatusText());
-            return ResponseEntity.status(statusCode).body(errorBody);
+            int status = ex.getStatusCode().value();
+            logger.warn("Unexpected error {} for imgHash='{}'", status, imgHash);
+            GeneralErrorBody errorBody = new GeneralErrorBody(status, ex.getStatusText());
+            return ResponseEntity.status(status).body(errorBody);
+        }
+    }
+
+    public ResponseEntity<?> deleteImgurImage(String deletehash) {
+        try {
+            ImgDeleteOkBody res = webClient.delete()
+                    .uri("/image/{deletehash}", deletehash)
+                    .header(HttpHeaders.AUTHORIZATION, String.format("Client-ID %s", clientId))
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .bodyToMono(ImgDeleteOkBody.class)
+                    .block();
+            logger.info("Successfully DELETED deletehash='{}'", deletehash);
+            return ResponseEntity.ok(res);
+        }
+        catch (WebClientResponseException ex) {
+            if (ex.getStatusCode().isSameCodeAs(HttpStatus.FORBIDDEN)) {
+                logger.info("403 Forbidden/Unauthorized on deletehash='{}'", deletehash);
+                ImgurDeleteForbiddenErrorBody forbiddenBody = new ImgurDeleteForbiddenErrorBody(deletehash);
+                return ResponseEntity.status(forbiddenBody.getStatus()).body(forbiddenBody);
+            }
+            int status = ex.getStatusCode().value();
+            logger.warn("Unexpected error {} for deletehash='{}'", status, deletehash);
+            GeneralErrorBody errorBody = new GeneralErrorBody(status, ex.getStatusText());
+            return ResponseEntity.status(status).body(errorBody);
         }
     }
 }

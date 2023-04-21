@@ -21,6 +21,7 @@ public class ImgurController {
 
     @GetMapping("/imgur/{imgHash}")
     public ResponseEntity<?> getImage(@PathVariable String imgHash) {
+        logger.info(String.format("Imgur GET request for imgHash='%s'", imgHash));
         return service.getImgurImage(imgHash);
     }
 
@@ -28,4 +29,10 @@ public class ImgurController {
     @PostMapping("/imgur/upload")
     public ResponseEntity<?> uploadImage(@RequestBody)
      */
+
+    @DeleteMapping("/imgur/{deletehash}")
+    public ResponseEntity<?> deleteImage(@PathVariable String deletehash) {
+        logger.info(String.format("Imgur DELETE request for deletehash='%s'", deletehash));
+        return service.deleteImgurImage(deletehash);
+    }
 }
