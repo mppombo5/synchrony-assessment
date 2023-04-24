@@ -30,15 +30,15 @@ public class ApiUserController {
     // Get a single user by ID
     // TODO: add searching function by username/last name
     @GetMapping("/users/{id}")
-    public ResponseEntity<EntityModel<?>> getOneUser(@PathVariable Long id) {
-        logger.info(String.format("Processing request for user data with ID %d", id));
+    public ResponseEntity<EntityModel<ApiUser>> getOneUser(@PathVariable Long id) {
+        logger.info("Processing request for user data with ID {}", id);
         return service.getSingleUser(id);
     }
 
     // Register new user
     @PostMapping("/register")
-    public ResponseEntity<EntityModel<?>> createUser(@RequestBody ApiUser newUser) {
-        logger.info(String.format("Request to register new user '%s'", newUser.getUsername()));
+    public ResponseEntity<EntityModel<ApiUser>> createUser(@RequestBody ApiUser newUser) {
+        logger.info("Request to register new user {}", newUser.getUsername());
         return service.registerNewUser(newUser);
     }
 }

@@ -28,7 +28,7 @@ public class ImgurService {
      * If you happen upon this, please don't get me banned from Imgur.
      */
     private final String clientId = "546c25a59c58ad7";
-    private final String authHeader = String.format("Client-ID %s", clientId);
+    private final String authHeader = "Client-ID " + clientId;
     private final WebClient webClient;
 
     public ImgurService(WebClient.Builder wcBuilder) {
