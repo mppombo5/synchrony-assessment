@@ -1,4 +1,4 @@
-package me.mppombo.synchronyapi.utility.assembler;
+package me.mppombo.synchronyapi.assembler;
 
 import me.mppombo.synchronyapi.controller.ApiUserController;
 import me.mppombo.synchronyapi.models.ApiUser;

@@ -27,9 +27,10 @@ public class ImgurController {
 
     @PostMapping(path = "/imgur/upload",
                  consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> uploadImage(@RequestPart MultipartFile image,
-                                         @RequestPart(required = false) String title,
-                                         @RequestPart(required = false) String description) {
+    public ResponseEntity<?> uploadImage(
+            @RequestPart MultipartFile image,
+            @RequestPart(required = false) String title,
+            @RequestPart(required = false) String description) {
         logger.info("Received Imgur POST request");
         return service.uploadImgurImage(image, title, description);
     }

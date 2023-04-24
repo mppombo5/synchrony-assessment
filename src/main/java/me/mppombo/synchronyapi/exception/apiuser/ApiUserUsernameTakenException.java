@@ -1,4 +1,4 @@
-package me.mppombo.synchronyapi.exception;
+package me.mppombo.synchronyapi.exception.apiuser;
 
 public class ApiUserUsernameTakenException extends RuntimeException {
     private final String username;

@@ -7,4 +7,4 @@ import java.util.Date;
  * Includes the HTTP status' name (but not code), a descriptive message, and the description given by the context's
  * WebRequest object.
  */
-public record ErrorBody(Date timestamp, String error, String message, String description) { }
+public record ApiUserErrorBody(Date timestamp, String error, String message, String description) { }

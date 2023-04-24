@@ -2,7 +2,7 @@ package me.mppombo.synchronyapi.controller;
 
 import me.mppombo.synchronyapi.models.ApiUser;
 import me.mppombo.synchronyapi.service.ApiUserService;
-import me.mppombo.synchronyapi.utility.assembler.ApiUserModelAssembler;
+import me.mppombo.synchronyapi.assembler.ApiUserModelAssembler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.CollectionModel;

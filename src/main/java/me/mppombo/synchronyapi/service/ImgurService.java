@@ -1,12 +1,11 @@
 package me.mppombo.synchronyapi.service;
 
-import me.mppombo.synchronyapi.dto.ImgurDeleteOkBody;
-import me.mppombo.synchronyapi.dto.ImgurUploadOkBody;
-import me.mppombo.synchronyapi.dto.ImgurViewOkBody;
-import me.mppombo.synchronyapi.utility.error.GeneralErrorBody;
-import me.mppombo.synchronyapi.utility.error.ImgurDeleteForbiddenErrorBody;
-import me.mppombo.synchronyapi.utility.error.ImgurGetNotFoundErrorBody;
-import me.mppombo.synchronyapi.utility.error.ImgurPostBadRequestErrorBody;
+import me.mppombo.synchronyapi.dto.imgur.DeleteOkBody;
+import me.mppombo.synchronyapi.dto.imgur.PostOkBody;
+import me.mppombo.synchronyapi.dto.imgur.GetOkBody;
+import me.mppombo.synchronyapi.exception.imgur.ImgurBadRequestException;
+import me.mppombo.synchronyapi.exception.imgur.ImgurNotFoundException;
+import me.mppombo.synchronyapi.exception.imgur.ImgurUnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Mono;
 
 @Service
 public class ImgurService {
@@ -41,28 +40,19 @@ public class ImgurService {
      * In testing, GET requests to the URI '/images/{hash}' only return either a 200 or 404 response.
      */
     public ResponseEntity<?> getImgurImage(String imgHash) {
-        try {
-            ImgurViewOkBody res = webClient.get()
-                    .uri("/image/{imgHash}", imgHash)
-                    .header(HttpHeaders.AUTHORIZATION, authHeader)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToMono(ImgurViewOkBody.class)
-                    .block();
-            logger.info("Successfully GOT imgHash='{}'", imgHash);
-            return ResponseEntity.ok(res);
-        }
-        catch (WebClientResponseException ex) {
-            if (ex.getStatusCode().isSameCodeAs(HttpStatus.NOT_FOUND)) {
-                logger.info("404 Not Found for imgHash='{}'", imgHash);
-                var nfBody = new ImgurGetNotFoundErrorBody(imgHash);
-                return ResponseEntity.status(nfBody.getStatus()).body(nfBody);
-            }
-            int status = ex.getStatusCode().value();
-            logger.warn("Unexpected error {} for imgHash='{}'", status, imgHash);
-            var errorBody = new GeneralErrorBody(status, ex.getStatusText());
-            return ResponseEntity.status(status).body(errorBody);
-        }
+        GetOkBody getBody = webClient.get()
+                .uri("/image/{imgHash}", imgHash)
+                .header(HttpHeaders.AUTHORIZATION, authHeader)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .onStatus(
+                        HttpStatus.NOT_FOUND::isSameCodeAs,
+                        res -> Mono.error(new ImgurNotFoundException(imgHash)))
+                .bodyToMono(GetOkBody.class)
+                .block();
+
+        logger.info("Successfully got imgHash='{}'", imgHash);
+        return ResponseEntity.ok(getBody);
     }
 
     /*
@@ -80,29 +70,20 @@ public class ImgurService {
         }
         var multipartData = multipartBodyBuilder.build();
 
-        try {
-            ImgurUploadOkBody res = webClient.post()
-                    .uri("/upload")
-                    .header(HttpHeaders.AUTHORIZATION, authHeader)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .body(BodyInserters.fromMultipartData(multipartData))
-                    .retrieve()
-                    .bodyToMono(ImgurUploadOkBody.class)
-                    .block();
-            logger.info("Successfully POSTED image with ID={}", res.data().id());
-            return ResponseEntity.ok(res);
-        }
-        catch (WebClientResponseException ex) {
-            if (ex.getStatusCode().isSameCodeAs(HttpStatus.BAD_REQUEST)) {
-                logger.info("400 Bad Request on image upload attempt");
-                var badRequestErrorBody = new ImgurPostBadRequestErrorBody();
-                return ResponseEntity.status(badRequestErrorBody.getStatus()).body(badRequestErrorBody);
-            }
-            int status = ex.getStatusCode().value();
-            logger.warn("Unexpected error {} on attempted image upload", status);
-            var errorBody = new GeneralErrorBody(status, ex.getStatusText());
-            return ResponseEntity.status(status).body(errorBody);
-        }
+        PostOkBody postBody = webClient.post()
+                .uri("/upload")
+                .header(HttpHeaders.AUTHORIZATION, authHeader)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromMultipartData(multipartData))
+                .retrieve()
+                .onStatus(
+                        HttpStatus.BAD_REQUEST::isSameCodeAs,
+                        res -> Mono.error(new ImgurBadRequestException()))
+                .bodyToMono(PostOkBody.class)
+                .block();
+
+        logger.info("Imgur gave 400 Bad Request on image upload");
+        return ResponseEntity.ok(postBody);
     }
 
     /*
@@ -111,27 +92,18 @@ public class ImgurService {
      * Forbidden).
      */
     public ResponseEntity<?> deleteImgurImage(String deletehash) {
-        try {
-            ImgurDeleteOkBody res = webClient.delete()
-                    .uri("/image/{deletehash}", deletehash)
-                    .header(HttpHeaders.AUTHORIZATION, authHeader)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToMono(ImgurDeleteOkBody.class)
-                    .block();
-            logger.info("Successfully DELETED deletehash='{}'", deletehash);
-            return ResponseEntity.ok(res);
-        }
-        catch (WebClientResponseException ex) {
-            if (ex.getStatusCode().isSameCodeAs(HttpStatus.FORBIDDEN)) {
-                logger.info("403 Forbidden/Unauthorized on deletehash='{}'", deletehash);
-                var forbiddenBody = new ImgurDeleteForbiddenErrorBody(deletehash);
-                return ResponseEntity.status(forbiddenBody.getStatus()).body(forbiddenBody);
-            }
-            int status = ex.getStatusCode().value();
-            logger.warn("Unexpected error {} for deletehash='{}'", status, deletehash);
-            var errorBody = new GeneralErrorBody(status, ex.getStatusText());
-            return ResponseEntity.status(status).body(errorBody);
-        }
+        DeleteOkBody deleteBody = webClient.delete()
+                .uri("/image/{deletehash}", deletehash)
+                .header(HttpHeaders.AUTHORIZATION, authHeader)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .onStatus(
+                        HttpStatus.FORBIDDEN::isSameCodeAs,
+                        res -> Mono.error(new ImgurUnauthorizedException(deletehash)))
+                .bodyToMono(DeleteOkBody.class)
+                .block();
+
+        logger.info("Successfully deleted Imgur image with deletehash='{}'", deletehash);
+        return ResponseEntity.ok(deleteBody);
     }
 }
