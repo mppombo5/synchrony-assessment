@@ -19,6 +19,7 @@ public class ImgurPostModelAssembler implements RepresentationModelAssembler<Pos
     public EntityModel<PostOkBody> toModel(PostOkBody body) {
         return EntityModel.of(
                 body,
+                linkTo(methodOn(ImgurController.class).getImage(body.data().id())).withSelfRel(),
                 linkTo(methodOn(ImgurController.class).getImage("")).withRel("imgurGet"),
                 linkTo(methodOn(ImgurController.class)
                         .uploadImage(null, null, null))

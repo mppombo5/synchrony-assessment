@@ -62,12 +62,8 @@ public class ImgurService {
     public PostOkBody uploadImgurImage(MultipartFile image, String title, String description) {
         var multipartBodyBuilder = new MultipartBodyBuilder();
         multipartBodyBuilder.part("image", image.getResource());
-        if (title != null) {
-            multipartBodyBuilder.part("title", title);
-        }
-        if (description != null) {
-            multipartBodyBuilder.part("description", description);
-        }
+        if (title != null) multipartBodyBuilder.part("title", title);
+        if (description != null) multipartBodyBuilder.part("description", description);
         var multipartData = multipartBodyBuilder.build();
 
         PostOkBody postBody = webClient.post()
