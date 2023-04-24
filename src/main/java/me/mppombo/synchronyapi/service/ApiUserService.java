@@ -2,59 +2,47 @@ package me.mppombo.synchronyapi.service;
 
 import me.mppombo.synchronyapi.exception.ApiUserNotFoundException;
 import me.mppombo.synchronyapi.exception.ApiUserUsernameTakenException;
-import me.mppombo.synchronyapi.utility.assembler.ApiUserModelAssembler;
-import me.mppombo.synchronyapi.controller.ApiUserController;
 import me.mppombo.synchronyapi.models.ApiUser;
 import me.mppombo.synchronyapi.repository.ApiUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 @Service
 public class ApiUserService {
-    private final Logger logger = LoggerFactory.getLogger(ApiUserService.class);
+    private final static Logger logger = LoggerFactory.getLogger(ApiUserService.class);
 
     private final ApiUserRepository repository;
-    private final ApiUserModelAssembler userModelAssembler;
 
-    public ApiUserService(ApiUserRepository repo, ApiUserModelAssembler userAssembler) {
+    public ApiUserService(ApiUserRepository repo) {
         this.repository = repo;
-        this.userModelAssembler = userAssembler;
     }
 
+
+    // Returns a list of all currently registered users.
+    public List<ApiUser> getAllRegisteredUsers() {
+        return repository.findAll();
+    }
 
     /*
      * Queries and returns a single user object by ID.
      * Returns a 404 if a user with the specified ID does not exist.
      */
-    public ResponseEntity<EntityModel<ApiUser>> getSingleUser(Long id) {
+    public ApiUser getSingleUser(Long id) {
         ApiUser user = repository.findById(id)
                 .orElseThrow(() -> new ApiUserNotFoundException(id));
         logger.info("Found user {}", user);
-        EntityModel<ApiUser> foundUserModel = userModelAssembler.toModel(user);
-        return ResponseEntity.ok(foundUserModel);
-    }
 
-    // Returns a list of all currently registered users.
-    public CollectionModel<EntityModel<ApiUser>> getAllRegisteredUsers() {
-        List<EntityModel<ApiUser>> users = repository.findAll().stream().map(userModelAssembler::toModel).toList();
-        return CollectionModel.of(users, linkTo(methodOn(ApiUserController.class).getAllUsers()).withSelfRel());
+        return user;
     }
 
     /*
      * Create a new user and save it to the repository.
      * The single constraint is that a new user cannot be created with a username that is already registered.
      */
-    public ResponseEntity<EntityModel<ApiUser>> registerNewUser(ApiUser newUser) {
+    public ApiUser registerNewUser(ApiUser newUser) {
         List<ApiUser> sameUsernames = repository.findByUsername(newUser.getUsername());
         if (!sameUsernames.isEmpty()) {
             ApiUser existingUser = sameUsernames.get(0);
@@ -63,9 +51,7 @@ public class ApiUserService {
 
         ApiUser savedUser = repository.save(newUser);
         logger.info("Created new user {}", savedUser);
-        EntityModel<ApiUser> newUserModel = userModelAssembler.toModel(savedUser);
-        return ResponseEntity
-                .created(newUserModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(newUserModel);
+
+        return savedUser;
     }
 }
