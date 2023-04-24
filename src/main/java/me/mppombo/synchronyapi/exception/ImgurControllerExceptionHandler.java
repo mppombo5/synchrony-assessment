@@ -1,8 +1,8 @@
 package me.mppombo.synchronyapi.exception;
 
-import me.mppombo.synchronyapi.assembler.ImgurBadRequestModelAssembler;
-import me.mppombo.synchronyapi.assembler.ImgurNotFoundModelAssembler;
-import me.mppombo.synchronyapi.assembler.ImgurUnauthorizedModelAssembler;
+import me.mppombo.synchronyapi.assembler.imgur.error.ImgurBadRequestModelAssembler;
+import me.mppombo.synchronyapi.assembler.imgur.error.ImgurNotFoundModelAssembler;
+import me.mppombo.synchronyapi.assembler.imgur.error.ImgurUnauthorizedModelAssembler;
 import me.mppombo.synchronyapi.exception.imgur.ImgurBadRequestException;
 import me.mppombo.synchronyapi.exception.imgur.ImgurNotFoundException;
 import me.mppombo.synchronyapi.exception.imgur.ImgurUnauthorizedException;

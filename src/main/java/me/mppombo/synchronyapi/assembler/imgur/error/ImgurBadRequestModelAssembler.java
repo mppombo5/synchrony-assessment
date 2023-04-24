@@ -1,4 +1,4 @@
-package me.mppombo.synchronyapi.assembler;
+package me.mppombo.synchronyapi.assembler.imgur.error;
 
 import me.mppombo.synchronyapi.controller.ImgurController;
 import me.mppombo.synchronyapi.exception.ImgurErrorBody;

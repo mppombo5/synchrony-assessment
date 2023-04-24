@@ -39,7 +39,7 @@ public class ImgurService {
      * Sends a GET request for the Imgur image specified by 'imgHash'.
      * In testing, GET requests to the URI '/images/{hash}' only return either a 200 or 404 response.
      */
-    public ResponseEntity<?> getImgurImage(String imgHash) {
+    public GetOkBody getImgurImage(String imgHash) {
         GetOkBody getBody = webClient.get()
                 .uri("/image/{imgHash}", imgHash)
                 .header(HttpHeaders.AUTHORIZATION, authHeader)
@@ -52,14 +52,14 @@ public class ImgurService {
                 .block();
 
         logger.info("Successfully got imgHash='{}'", imgHash);
-        return ResponseEntity.ok(getBody);
+        return getBody;
     }
 
     /*
      * Sends a POST request with a multipart/form-data body which attempts to upload the supplied image to Imgur.
      * Imgur only ever seems to respond with a 200 for uploaded, or a 400 for a malformed request.
      */
-    public ResponseEntity<?> uploadImgurImage(MultipartFile image, String title, String description) {
+    public PostOkBody uploadImgurImage(MultipartFile image, String title, String description) {
         var multipartBodyBuilder = new MultipartBodyBuilder();
         multipartBodyBuilder.part("image", image.getResource());
         if (title != null) {
@@ -83,7 +83,7 @@ public class ImgurService {
                 .block();
 
         logger.info("Imgur gave 400 Bad Request on image upload");
-        return ResponseEntity.ok(postBody);
+        return postBody;
     }
 
     /*
@@ -91,7 +91,7 @@ public class ImgurService {
      * Only ever gets a 200 for successful deletion or a 403 with an "Unauthorized" (even though 403 is technically
      * Forbidden).
      */
-    public ResponseEntity<?> deleteImgurImage(String deletehash) {
+    public DeleteOkBody deleteImgurImage(String deletehash) {
         DeleteOkBody deleteBody = webClient.delete()
                 .uri("/image/{deletehash}", deletehash)
                 .header(HttpHeaders.AUTHORIZATION, authHeader)
@@ -104,6 +104,6 @@ public class ImgurService {
                 .block();
 
         logger.info("Successfully deleted Imgur image with deletehash='{}'", deletehash);
-        return ResponseEntity.ok(deleteBody);
+        return deleteBody;
     }
 }

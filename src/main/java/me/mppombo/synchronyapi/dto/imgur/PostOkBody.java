@@ -15,6 +15,7 @@ public record PostOkBody(boolean success, int status, ImgUploadData data) {
      * - link (str)
      * - title (nullable str)
      * - description (nullable str)
+     * - type
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record ImgUploadData(String id,
