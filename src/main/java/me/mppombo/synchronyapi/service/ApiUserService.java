@@ -14,16 +14,16 @@ import java.util.List;
 public class ApiUserService {
     private final static Logger logger = LoggerFactory.getLogger(ApiUserService.class);
 
-    private final ApiUserRepository repository;
+    private final ApiUserRepository userRepository;
 
     public ApiUserService(ApiUserRepository repo) {
-        this.repository = repo;
+        this.userRepository = repo;
     }
 
 
     // Returns a list of all currently registered users.
     public List<ApiUser> getAllRegisteredUsers() {
-        return repository.findAll();
+        return userRepository.findAll();
     }
 
     /*
@@ -31,7 +31,7 @@ public class ApiUserService {
      * Returns a 404 if a user with the specified ID does not exist.
      */
     public ApiUser getSingleUser(Long id) {
-        ApiUser user = repository.findById(id)
+        ApiUser user = userRepository.findById(id)
                 .orElseThrow(() -> new ApiUserNotFoundException(id));
         logger.info("Found user {}", user);
 
@@ -43,13 +43,10 @@ public class ApiUserService {
      * The single constraint is that a new user cannot be created with a username that is already registered.
      */
     public ApiUser registerNewUser(ApiUser newUser) {
-        List<ApiUser> sameUsernames = repository.findByUsername(newUser.getUsername());
-        if (!sameUsernames.isEmpty()) {
-            ApiUser existingUser = sameUsernames.get(0);
-            throw new ApiUserUsernameTakenException(existingUser.getUsername());
-        }
+        String username = newUser.getUsername();
+        if (userRepository.existsByUsername(username)) throw new ApiUserUsernameTakenException(username);
 
-        ApiUser savedUser = repository.save(newUser);
+        ApiUser savedUser = userRepository.save(newUser);
         logger.info("Created new user {}", savedUser);
 
         return savedUser;

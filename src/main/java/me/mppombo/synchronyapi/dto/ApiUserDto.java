@@ -10,7 +10,7 @@ import org.springframework.hateoas.server.core.Relation;
  */
 @Relation(itemRelation = "user", collectionRelation = "users")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public record ApiUserResDto(
+public record ApiUserDto(
         @JsonIgnore     // just used to build links, not a part of the response
         Long id,
 

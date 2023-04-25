@@ -1,8 +1,8 @@
 package me.mppombo.synchronyapi.controller;
 
 import jakarta.validation.Valid;
-import me.mppombo.synchronyapi.dto.ApiUserCreateDto;
-import me.mppombo.synchronyapi.dto.ApiUserResDto;
+import me.mppombo.synchronyapi.dto.RegisterDto;
+import me.mppombo.synchronyapi.dto.ApiUserDto;
 import me.mppombo.synchronyapi.models.ApiUser;
 import me.mppombo.synchronyapi.service.ApiUserService;
 import me.mppombo.synchronyapi.assembler.ApiUserDtoModelAssembler;
@@ -20,6 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("/users")
 public class ApiUserController {
     private final static Logger logger = LoggerFactory.getLogger(ApiUserController.class);
 
@@ -33,14 +34,14 @@ public class ApiUserController {
 
 
     // Aggregate all registered users
-    @GetMapping("/users")
-    public ResponseEntity<CollectionModel<EntityModel<ApiUserResDto>>> getAllUsers() {
+    @GetMapping({"", "/"})
+    public ResponseEntity<CollectionModel<EntityModel<ApiUserDto>>> getAllUsers() {
         logger.info("Processing request for aggregate information of all users");
 
         List<ApiUser> allUsers = service.getAllRegisteredUsers();
         var allUserDtoModels = allUsers
                 .stream()
-                .map(ApiUser::toResDto)
+                .map(ApiUser::toDto)
                 .map(userDtoModelAssembler::toModel)
                 .toList();
         var userDtosCollection = CollectionModel.of(
@@ -52,26 +53,26 @@ public class ApiUserController {
 
     // Get a single user by ID
     // TODO: add searching function by username/last name
-    @GetMapping("/users/{id}")
-    public ResponseEntity<EntityModel<ApiUserResDto>> getOneUser(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<EntityModel<ApiUserDto>> getOneUser(@PathVariable Long id) {
         logger.info("Processing request for user data with ID {}", id);
 
         ApiUser user = service.getSingleUser(id);
-        var userModel = userDtoModelAssembler.toModel(user.toResDto());
+        var userModel = userDtoModelAssembler.toModel(user.toDto());
 
         return ResponseEntity.ok(userModel);
     }
 
     // Register new user
     @PostMapping("/register")
-    public ResponseEntity<EntityModel<ApiUserResDto>> createUser(
+    public ResponseEntity<EntityModel<ApiUserDto>> createUser(
             @Valid
             @RequestBody
-            ApiUserCreateDto newUserDto) {
+            RegisterDto newUserDto) {
         logger.info("Request to register new user w/ username='{}'", newUserDto.username());
 
-        ApiUser savedUser = service.registerNewUser(ApiUser.fromCreateDto(newUserDto));
-        var savedUserModel = userDtoModelAssembler.toModel(savedUser.toResDto());
+        ApiUser savedUser = service.registerNewUser(ApiUser.fromRegisterDto(newUserDto));
+        var savedUserModel = userDtoModelAssembler.toModel(savedUser.toDto());
 
         return ResponseEntity
                 .created(savedUserModel.getRequiredLink(IanaLinkRelations.SELF).toUri())

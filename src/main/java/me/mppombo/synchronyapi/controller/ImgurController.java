@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URI;
 
 @RestController
+@RequestMapping("/imgur")
 public class ImgurController {
     private final static Logger logger = LoggerFactory.getLogger(ImgurController.class);
 
@@ -38,7 +39,7 @@ public class ImgurController {
     }
 
 
-    @GetMapping("/imgur/{imgHash}")
+    @GetMapping("/image/{imgHash}")
     public ResponseEntity<EntityModel<GetOkBody>> getImage(@PathVariable String imgHash) {
         logger.info("Imgur GET request for imgHash='{}'", imgHash);
         var getBodyModel = getModelAssembler.toModel(service.getImgurImage(imgHash));
@@ -46,7 +47,7 @@ public class ImgurController {
         return ResponseEntity.ok(getBodyModel);
     }
 
-    @PostMapping(path = "/imgur/upload",
+    @PostMapping(path = "/upload",
                  consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<EntityModel<PostOkBody>> uploadImage(
             @RequestPart MultipartFile image,
@@ -60,7 +61,7 @@ public class ImgurController {
         return ResponseEntity.created(URI.create(imgLink)).body(postBodyModel);
     }
 
-    @DeleteMapping("/imgur/{deletehash}")
+    @DeleteMapping("/image/{deletehash}")
     public ResponseEntity<EntityModel<DeleteOkBody>> deleteImage(@PathVariable String deletehash) {
         logger.info("Imgur DELETE request for deletehash='{}'", deletehash);
         var deleteBodyModel = deleteModelAssembler.toModel(service.deleteImgurImage(deletehash));

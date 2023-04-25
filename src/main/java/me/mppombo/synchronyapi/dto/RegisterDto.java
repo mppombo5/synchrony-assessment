@@ -1,6 +1,5 @@
 package me.mppombo.synchronyapi.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,7 +15,7 @@ import jakarta.validation.constraints.Size;
  * - firstName
  * - lastName
  */
-public record ApiUserCreateDto(
+public record RegisterDto(
         @NotBlank
         @Size(min = 2, message = "Username must have at least 2 characters")
         String username,
@@ -30,4 +29,11 @@ public record ApiUserCreateDto(
         String email,
 
         String firstName,
-        String lastName) { }
+        String lastName) {
+    @Override
+    public String toString() {
+        // Just don't wanna be logging passwords.
+        return String.format("NewUser[username='%s', email='%s', firstName='%s', lastName='%s']",
+                username, email, firstName, lastName);
+    }
+}
