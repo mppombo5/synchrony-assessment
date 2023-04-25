@@ -10,7 +10,7 @@ import java.util.Date;
  */
 @Relation(itemRelation = "image", collectionRelation = "images")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public record ImageDto(
+public record ImgurImageDto(
         String imgurId,
         String imgurLink,
         String deletehash,

@@ -1,7 +1,7 @@
 package me.mppombo.synchronyapi.controller;
 
 import me.mppombo.synchronyapi.assembler.ImageDtoModelAssembler;
-import me.mppombo.synchronyapi.dto.ImageDto;
+import me.mppombo.synchronyapi.dto.ImgurImageDto;
 import me.mppombo.synchronyapi.dto.ImgurDeleteDto;
 import me.mppombo.synchronyapi.models.ImgurImage;
 import me.mppombo.synchronyapi.service.ImgurService;
@@ -34,7 +34,7 @@ public class ImgurController {
 
 
     @GetMapping("/image/{imgHash}")
-    public ResponseEntity<EntityModel<ImageDto>> getImage(@PathVariable String imgHash) {
+    public ResponseEntity<EntityModel<ImgurImageDto>> getImage(@PathVariable String imgHash) {
         logger.info("Received Imgur GET request for imgHash='{}'", imgHash);
 
         ImgurImage gottenImage = service.getImgurImage(imgHash);
@@ -45,7 +45,7 @@ public class ImgurController {
 
     @PostMapping(path = "/upload",
                  consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<EntityModel<ImageDto>> uploadImage(
+    public ResponseEntity<EntityModel<ImgurImageDto>> uploadImage(
             @RequestPart MultipartFile image,
             @RequestPart(required = false) String title,
             @RequestPart(required = false) String description) {

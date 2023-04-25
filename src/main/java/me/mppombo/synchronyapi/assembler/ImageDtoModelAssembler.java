@@ -1,7 +1,7 @@
 package me.mppombo.synchronyapi.assembler;
 
 import me.mppombo.synchronyapi.controller.ImgurController;
-import me.mppombo.synchronyapi.dto.ImageDto;
+import me.mppombo.synchronyapi.dto.ImgurImageDto;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -10,9 +10,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class ImageDtoModelAssembler implements RepresentationModelAssembler<ImageDto, EntityModel<ImageDto>> {
+public class ImageDtoModelAssembler implements RepresentationModelAssembler<ImgurImageDto, EntityModel<ImgurImageDto>> {
     @Override
-    public EntityModel<ImageDto> toModel(ImageDto imageDto) {
+    public EntityModel<ImgurImageDto> toModel(ImgurImageDto imageDto) {
         return EntityModel.of(
                 imageDto,
                 linkTo(methodOn(ImgurController.class).getImage(imageDto.imgurId())).withSelfRel(),

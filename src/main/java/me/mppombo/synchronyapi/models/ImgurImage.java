@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.mppombo.synchronyapi.dto.ImageDto;
+import me.mppombo.synchronyapi.dto.ImgurImageDto;
 import me.mppombo.synchronyapi.dto.imgur.ImgurDataDto;
 
 import java.util.Date;
@@ -66,8 +66,8 @@ public class ImgurImage {
                 dto.size());
     }
 
-    public ImageDto toDto() {
-        return new ImageDto(
+    public ImgurImageDto toDto() {
+        return new ImgurImageDto(
                 imgurId,
                 imgurLink,
                 deletehash,
