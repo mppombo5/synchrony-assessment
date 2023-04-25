@@ -1,8 +1,6 @@
 package me.mppombo.synchronyapi.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,6 +42,9 @@ public class ImgurImage {
     private Integer width;
     private Integer size;
 
+    @ManyToOne
+    private ApiUser owner;
+
     @Override
     public String toString() {
         return String.format("Image[id=%d, imgurId='%s', imgurLink='%s', type='%s', title='%s', description='%s']",
@@ -63,7 +64,8 @@ public class ImgurImage {
                 dto.animated(),
                 dto.height(),
                 dto.width(),
-                dto.size());
+                dto.size(),
+                null);
     }
 
     public ImgurImageDto toDto() {

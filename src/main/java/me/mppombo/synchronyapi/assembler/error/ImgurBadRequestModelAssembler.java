@@ -19,7 +19,7 @@ public class ImgurBadRequestModelAssembler
         return EntityModel.of(
                 body,
                 linkTo(methodOn(ImgurController.class)
-                        .uploadImage(null, null, null))
+                        .uploadImage(null, null, null, null))
                         .withRel("imgurPost"));
     }
 }

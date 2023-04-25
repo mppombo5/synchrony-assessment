@@ -18,6 +18,6 @@ public class ImgurUnauthorizedModelAssembler
     public EntityModel<ImgurErrorDto> toModel(ImgurErrorDto body) {
         return EntityModel.of(
                 body,
-                linkTo(methodOn(ImgurController.class).deleteImage("")).withRel("imgurDelete"));
+                linkTo(methodOn(ImgurController.class).deleteImage(null, "")).withRel("imgurDelete"));
     }
 }

@@ -17,8 +17,8 @@ public class ImageDtoModelAssembler implements RepresentationModelAssembler<Imgu
                 imageDto,
                 linkTo(methodOn(ImgurController.class).getImage(null, imageDto.imgurId())).withSelfRel(),
                 linkTo(methodOn(ImgurController.class)
-                        .uploadImage(null, null, null))
+                        .uploadImage(null, null, null, null))
                         .withRel("imgurUpload"),
-                linkTo(methodOn(ImgurController.class).deleteImage("")).withRel("imgurDelete"));
+                linkTo(methodOn(ImgurController.class).deleteImage(null, "")).withRel("imgurDelete"));
     }
 }

@@ -8,7 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.mppombo.synchronyapi.dto.ApiUserDto;
+import me.mppombo.synchronyapi.dto.ImgurImageDto;
 import me.mppombo.synchronyapi.dto.RegisterDto;
+
+import java.util.List;
 
 /*
  * Represents a registered user of the API. Contains "basic information", username, and password.
@@ -47,7 +50,7 @@ public class ApiUser {
         return new ApiUser(0L, dto.username(), dto.password(), dto.email(), dto.firstName(), dto.lastName(), "USER");
     }
 
-    public ApiUserDto toDto() {
-        return new ApiUserDto(id, username, email, firstName, lastName);
+    public ApiUserDto toDto(List<ImgurImageDto> images) {
+        return new ApiUserDto(id, username, email, firstName, lastName, images);
     }
 }

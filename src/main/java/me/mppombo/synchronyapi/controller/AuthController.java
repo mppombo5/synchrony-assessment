@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -53,7 +55,8 @@ public class AuthController {
         // here.
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         ApiUser savedUser = userService.registerNewUser(newUser);
-        var savedUserModel = userDtoModelAssembler.toModel(savedUser.toDto());
+        // Just registered, they won't have any pictures. So build with empty list
+        var savedUserModel = userDtoModelAssembler.toModel(savedUser.toDto(List.of()));
 
         return ResponseEntity
                 .created(savedUserModel.getRequiredLink(IanaLinkRelations.SELF).toUri())

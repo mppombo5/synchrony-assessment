@@ -3,8 +3,10 @@ package me.mppombo.synchronyapi.controller;
 import lombok.RequiredArgsConstructor;
 import me.mppombo.synchronyapi.dto.ApiUserDto;
 import me.mppombo.synchronyapi.model.ApiUser;
+import me.mppombo.synchronyapi.model.ImgurImage;
 import me.mppombo.synchronyapi.service.ApiUserService;
 import me.mppombo.synchronyapi.assembler.ApiUserDtoModelAssembler;
+import me.mppombo.synchronyapi.service.ImgurService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.CollectionModel;
@@ -24,6 +26,7 @@ public class ApiUserController {
     private final static Logger logger = LoggerFactory.getLogger(ApiUserController.class);
 
     private final ApiUserService userService;
+    private final ImgurService imgurService;
     private final ApiUserDtoModelAssembler userDtoModelAssembler;
 
     // Aggregate all registered users
@@ -34,7 +37,11 @@ public class ApiUserController {
         List<ApiUser> allUsers = userService.getAllRegisteredUsers();
         var allUserDtoModels = allUsers
                 .stream()
-                .map(ApiUser::toDto)
+                .map(user -> {
+                    var userImages = imgurService.getAllImagesForUser(user)
+                            .stream().map(ImgurImage::toDto).toList();
+                    return user.toDto(userImages);
+                })
                 .map(userDtoModelAssembler::toModel)
                 .toList();
         var userDtosCollection = CollectionModel.of(
@@ -51,7 +58,9 @@ public class ApiUserController {
         logger.info("Processing request for user data with ID {}", id);
 
         ApiUser user = userService.getUserById(id);
-        var userModel = userDtoModelAssembler.toModel(user.toDto());
+        var userImages = imgurService.getAllImagesForUser(user)
+                .stream().map(ImgurImage::toDto).toList();
+        var userModel = userDtoModelAssembler.toModel(user.toDto(userImages));
 
         return ResponseEntity.ok(userModel);
     }

@@ -3,8 +3,10 @@ package me.mppombo.synchronyapi.exception;
 import me.mppombo.synchronyapi.assembler.error.ImgurBadRequestModelAssembler;
 import me.mppombo.synchronyapi.assembler.error.ImgurNotFoundModelAssembler;
 import me.mppombo.synchronyapi.assembler.error.ImgurUnauthorizedModelAssembler;
+import me.mppombo.synchronyapi.controller.ImgurController;
 import me.mppombo.synchronyapi.dto.error.ImgurErrorDto;
 import me.mppombo.synchronyapi.exception.imgur.ImgurBadRequestException;
+import me.mppombo.synchronyapi.exception.imgur.ImgurDontOwnException;
 import me.mppombo.synchronyapi.exception.imgur.ImgurNotFoundException;
 import me.mppombo.synchronyapi.exception.imgur.ImgurUnauthorizedException;
 import org.slf4j.Logger;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @ControllerAdvice
 public class ImgurControllerExceptionHandler {
@@ -38,7 +43,7 @@ public class ImgurControllerExceptionHandler {
 
     @ExceptionHandler(ImgurNotFoundException.class)
     public ResponseEntity<EntityModel<ImgurErrorDto>> imageNotFoundHandler(ImgurNotFoundException ex, WebRequest req) {
-        logger.warn("404 on Imgur GET w/ imgHash='{}'", ex.getImgHash());
+        logger.warn("404 on Imgur");
         ImgurErrorDto notFoundBody = new ImgurErrorDto(
                 new Date(),
                 HttpStatus.NOT_FOUND.name(),
@@ -70,5 +75,21 @@ public class ImgurControllerExceptionHandler {
                 req.getDescription(false));
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(unauthModelAssembler.toModel(unauthBody));
+    }
+
+    @ExceptionHandler(ImgurDontOwnException.class)
+    public ResponseEntity<EntityModel<ImgurErrorDto>> dontOwnHandler(ImgurDontOwnException ex, WebRequest req) {
+        logger.warn("Unauthorized request for image");
+        var dontOwnDto = new ImgurErrorDto(
+                new Date(),
+                HttpStatus.UNAUTHORIZED.name(),
+                ex.getMessage(),
+                req.getDescription(false));
+
+        var dontOwnModel = EntityModel.of(
+                dontOwnDto,
+                linkTo(methodOn(ImgurController.class).getImage(null, "")).withRel("imgurGet"));
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(dontOwnModel);
     }
 }

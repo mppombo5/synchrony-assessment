@@ -1,14 +1,11 @@
 package me.mppombo.synchronyapi.exception.imgur;
 
+/*
+ * Ends up being a multipurpose exception for both when the image can't be found on Imgur, and when the image is not
+ * present in the ImgurImage database since users can only view and delete their own images.
+ */
 public class ImgurNotFoundException extends RuntimeException {
-    private final String imgHash;
-
-    public ImgurNotFoundException(String imgHash) {
-        super("No image with imgHash='" + imgHash +"' found on Imgur");
-        this.imgHash = imgHash;
-    }
-
-    public String getImgHash() {
-        return imgHash;
+    public ImgurNotFoundException() {
+        super("Requested image could not be found");
     }
 }

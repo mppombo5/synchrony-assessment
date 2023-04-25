@@ -47,7 +47,7 @@ public class ImgurHelper {
                 .retrieve()
                 .onStatus(
                         HttpStatus.NOT_FOUND::isSameCodeAs,
-                        res -> Mono.error(new ImgurNotFoundException(imgHash)))
+                        res -> Mono.error(new ImgurNotFoundException()))
                 .bodyToMono(GetOkDto.class)
                 .block();
     }
