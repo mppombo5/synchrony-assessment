@@ -7,4 +7,4 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * Unlike the responses for GET and POST requests, the 'data' field is not an object but rather a boolean value.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record DeleteOkBody(boolean success, int status, boolean data) { }
+public record DeleteOkDto(boolean success, int status, boolean data) { }

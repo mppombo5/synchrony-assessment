@@ -1,4 +1,4 @@
-package me.mppombo.synchronyapi.exception;
+package me.mppombo.synchronyapi.dto.error;
 
 import java.util.Date;
 
@@ -7,4 +7,4 @@ import java.util.Date;
  * Includes the HTTP status' name (but not code), a descriptive message, and the description given by the context's
  * WebRequest object.
  */
-public record ApiUserErrorBody(Date timestamp, String error, String message, String description) { }
+public record ApiUserErrorDto(Date timestamp, String error, String message, String description) { }

@@ -2,90 +2,82 @@ package me.mppombo.synchronyapi.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.springframework.hateoas.server.core.Relation;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import me.mppombo.synchronyapi.dto.ImageDto;
+import me.mppombo.synchronyapi.dto.imgur.ImgurDataDto;
+
+import java.util.Date;
 
 /*
- * Represents an image which is uploaded by an ApiUser. Contains image information along with its owner.
- * Fields include:
- * - apiUser (str, username of ApiUser who uploaded it)
- * - imgurId (str)
- * - deletehash (str)
- * - link (str)
- * - title (nullable str)
- * - description (nullable str)
- * - type (str)
+ * Represents the Image models stored in the H2 database which are uploaded by ApiUsers.
+ *
+ * Mostly contains fields which are included in the "data" part of the response object given in an Imgur API call with
+ * some omissions, such as "account_url" and "account_id" which are usually null and irrelevant fields like "is_ad",
+ * "bandwidth", or "nsfw" (lol).
+ *
+ * Images are associated with an ApiUser and are added+associated on successful POST image upload, and they're
+ * removed/unassociated upon successful image DELETE call.
  */
+
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Relation(itemRelation = "image", collectionRelation = "images")
 public class ImgurImage {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
 
-    private String apiUser;
     private String imgurId;
+    private String imgurLink;
     private String deletehash;
-    private String link;
+    private Long datetime;   // upload time in seconds since epoch
     private String title;
     private String description;
     private String type;
-
-    protected ImgurImage() { }
-
-    public ImgurImage(String apiUser,
-                      String imgurId,
-                      String deletehash,
-                      String link,
-                      String title,
-                      String description,
-                      String type) {
-        this.apiUser = apiUser;
-        this.imgurId = imgurId;
-        this.deletehash = deletehash;
-        this.link = link;
-        this.title = title;
-        this.description = description;
-        this.type = type;
-    }
-
+    private Boolean animated;
+    private Integer height;
+    private Integer width;
+    private Integer size;
 
     @Override
     public String toString() {
-        return String.format("Image[id=%d, apiUser='%s', imgurId='%s', deletehash='%s', title='%s'",
-                id, apiUser, imgurId, deletehash, title);
+        return String.format("Image[id=%d, imgurId='%s', imgurLink='%s', type='%s', title='%s', description='%s']",
+                id, imgurId, imgurLink, type, title, description);
     }
 
-    public Long getId() {
-        return id;
+    public static ImgurImage fromDataDto(ImgurDataDto dto) {
+        return new ImgurImage(
+                0L,
+                dto.id(),
+                dto.link(),
+                dto.deletehash(),
+                dto.datetime(),
+                dto.title(),
+                dto.description(),
+                dto.type(),
+                dto.animated(),
+                dto.height(),
+                dto.width(),
+                dto.size());
     }
 
-    public String getApiUser() {
-        return apiUser;
-    }
-
-    public String getImgurId() {
-        return imgurId;
-    }
-
-    public String getDeletehash() {
-        return deletehash;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getType() {
-        return type;
+    public ImageDto toDto() {
+        return new ImageDto(
+                imgurId,
+                imgurLink,
+                deletehash,
+                new Date(datetime * 1000),  // datetime stored as seconds, Date takes milliseconds
+                title,
+                description,
+                type,
+                animated,
+                height,
+                width,
+                size);
     }
 }

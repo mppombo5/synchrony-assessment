@@ -1,7 +1,8 @@
 package me.mppombo.synchronyapi.exception;
 
-import me.mppombo.synchronyapi.assembler.ApiUserNotFoundModelAssembler;
-import me.mppombo.synchronyapi.assembler.ApiUserUsernameTakenModelAssembler;
+import me.mppombo.synchronyapi.assembler.error.ApiUserNotFoundModelAssembler;
+import me.mppombo.synchronyapi.assembler.error.ApiUserUsernameTakenModelAssembler;
+import me.mppombo.synchronyapi.dto.error.ApiUserErrorDto;
 import me.mppombo.synchronyapi.exception.apiuser.ApiUserNotFoundException;
 import me.mppombo.synchronyapi.exception.apiuser.ApiUserUsernameTakenException;
 import org.slf4j.Logger;
@@ -31,28 +32,28 @@ public class ApiUserControllerExceptionHandler {
 
 
     @ExceptionHandler(ApiUserNotFoundException.class)
-    public ResponseEntity<EntityModel<ApiUserErrorBody>> userNotFoundHandler(ApiUserNotFoundException ex, WebRequest req) {
+    public ResponseEntity<EntityModel<ApiUserErrorDto>> userNotFoundHandler(ApiUserNotFoundException ex, WebRequest req) {
         logger.info("ApiUser w/ ID={} not found, sending 404", ex.getRequestedId());
-        ApiUserErrorBody notFoundBody = new ApiUserErrorBody(
+        ApiUserErrorDto notFoundBody = new ApiUserErrorDto(
                 new Date(),
                 HttpStatus.NOT_FOUND.name(),
                 ex.getMessage(),
                 req.getDescription(false));
 
-        EntityModel<ApiUserErrorBody> notFoundModel = notFoundAssembler.toModel(notFoundBody);
+        EntityModel<ApiUserErrorDto> notFoundModel = notFoundAssembler.toModel(notFoundBody);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(notFoundModel);
     }
 
     @ExceptionHandler(ApiUserUsernameTakenException.class)
-    public ResponseEntity<EntityModel<ApiUserErrorBody>> usernameTakenHandler(ApiUserUsernameTakenException ex, WebRequest req) {
+    public ResponseEntity<EntityModel<ApiUserErrorDto>> usernameTakenHandler(ApiUserUsernameTakenException ex, WebRequest req) {
         logger.info("ApiUser w/ username='{}' exists, sending 409", ex.getUsername());
-        ApiUserErrorBody usernameTakenBody = new ApiUserErrorBody(
+        ApiUserErrorDto usernameTakenBody = new ApiUserErrorDto(
                 new Date(),
                 HttpStatus.CONFLICT.name(),
                 ex.getMessage(),
                 req.getDescription(false));
 
-        EntityModel<ApiUserErrorBody> usernameTakenModel = usernameTakenAssembler.toModel(usernameTakenBody);
+        EntityModel<ApiUserErrorDto> usernameTakenModel = usernameTakenAssembler.toModel(usernameTakenBody);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(usernameTakenModel);
     }
 }

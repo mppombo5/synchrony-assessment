@@ -1,7 +1,7 @@
-package me.mppombo.synchronyapi.assembler.imgur.ok;
+package me.mppombo.synchronyapi.assembler;
 
 import me.mppombo.synchronyapi.controller.ImgurController;
-import me.mppombo.synchronyapi.dto.imgur.GetOkBody;
+import me.mppombo.synchronyapi.dto.ImageDto;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -9,20 +9,16 @@ import org.springframework.stereotype.Component;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-/*
- * Model assembler for GETs/POSTs/DELETEs where everything turns out all fine and dandy
- */
 @Component
-public class ImgurGetModelAssembler implements RepresentationModelAssembler<GetOkBody, EntityModel<GetOkBody>> {
+public class ImageDtoModelAssembler implements RepresentationModelAssembler<ImageDto, EntityModel<ImageDto>> {
     @Override
-    public EntityModel<GetOkBody> toModel(GetOkBody body) {
+    public EntityModel<ImageDto> toModel(ImageDto imageDto) {
         return EntityModel.of(
-                body,
-                linkTo(methodOn(ImgurController.class).getImage(body.data().id())).withSelfRel(),
-                linkTo(methodOn(ImgurController.class).getImage("")).withRel("imgurGet"),
+                imageDto,
+                linkTo(methodOn(ImgurController.class).getImage(imageDto.imgurId())).withSelfRel(),
                 linkTo(methodOn(ImgurController.class)
                         .uploadImage(null, null, null))
-                        .withRel("imgurPost"),
+                        .withRel("imgurUpload"),
                 linkTo(methodOn(ImgurController.class).deleteImage("")).withRel("imgurDelete"));
     }
 }

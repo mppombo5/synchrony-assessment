@@ -1,8 +1,9 @@
 package me.mppombo.synchronyapi.exception;
 
-import me.mppombo.synchronyapi.assembler.imgur.error.ImgurBadRequestModelAssembler;
-import me.mppombo.synchronyapi.assembler.imgur.error.ImgurNotFoundModelAssembler;
-import me.mppombo.synchronyapi.assembler.imgur.error.ImgurUnauthorizedModelAssembler;
+import me.mppombo.synchronyapi.assembler.error.ImgurBadRequestModelAssembler;
+import me.mppombo.synchronyapi.assembler.error.ImgurNotFoundModelAssembler;
+import me.mppombo.synchronyapi.assembler.error.ImgurUnauthorizedModelAssembler;
+import me.mppombo.synchronyapi.dto.error.ImgurErrorDto;
 import me.mppombo.synchronyapi.exception.imgur.ImgurBadRequestException;
 import me.mppombo.synchronyapi.exception.imgur.ImgurNotFoundException;
 import me.mppombo.synchronyapi.exception.imgur.ImgurUnauthorizedException;
@@ -36,9 +37,9 @@ public class ImgurControllerExceptionHandler {
 
 
     @ExceptionHandler(ImgurNotFoundException.class)
-    public ResponseEntity<EntityModel<ImgurErrorBody>> imageNotFoundHandler(ImgurNotFoundException ex, WebRequest req) {
+    public ResponseEntity<EntityModel<ImgurErrorDto>> imageNotFoundHandler(ImgurNotFoundException ex, WebRequest req) {
         logger.warn("404 on Imgur GET w/ imgHash='{}'", ex.getImgHash());
-        ImgurErrorBody notFoundBody = new ImgurErrorBody(
+        ImgurErrorDto notFoundBody = new ImgurErrorDto(
                 new Date(),
                 HttpStatus.NOT_FOUND.name(),
                 ex.getMessage(),
@@ -48,9 +49,9 @@ public class ImgurControllerExceptionHandler {
     }
 
     @ExceptionHandler(ImgurBadRequestException.class)
-    public ResponseEntity<EntityModel<ImgurErrorBody>> badRequestHandler(ImgurBadRequestException ex, WebRequest req) {
+    public ResponseEntity<EntityModel<ImgurErrorDto>> badRequestHandler(ImgurBadRequestException ex, WebRequest req) {
         logger.warn("Imgur POST request returned 400 Bad Request");
-        ImgurErrorBody badReqBody = new ImgurErrorBody(
+        ImgurErrorDto badReqBody = new ImgurErrorDto(
                 new Date(),
                 HttpStatus.BAD_REQUEST.name(),
                 ex.getMessage(),
@@ -60,9 +61,9 @@ public class ImgurControllerExceptionHandler {
     }
 
     @ExceptionHandler(ImgurUnauthorizedException.class)
-    public ResponseEntity<EntityModel<ImgurErrorBody>> unauthHandler(ImgurUnauthorizedException ex, WebRequest req) {
+    public ResponseEntity<EntityModel<ImgurErrorDto>> unauthHandler(ImgurUnauthorizedException ex, WebRequest req) {
         logger.warn("Imgur DELETE request returned 403 Unauthorized");
-        ImgurErrorBody unauthBody = new ImgurErrorBody(
+        ImgurErrorDto unauthBody = new ImgurErrorDto(
                 new Date(),
                 HttpStatus.FORBIDDEN.name(),
                 ex.getMessage(),
