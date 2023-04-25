@@ -33,7 +33,7 @@ public class ApiUserControllerExceptionHandler {
 
     @ExceptionHandler(ApiUserNotFoundException.class)
     public ResponseEntity<EntityModel<ApiUserErrorDto>> userNotFoundHandler(ApiUserNotFoundException ex, WebRequest req) {
-        logger.info("ApiUser w/ ID={} not found, sending 404", ex.getRequestedId());
+        logger.info("ApiUser w/ not found, sending 404");
         ApiUserErrorDto notFoundBody = new ApiUserErrorDto(
                 new Date(),
                 HttpStatus.NOT_FOUND.name(),

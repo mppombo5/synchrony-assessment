@@ -15,7 +15,7 @@ public class ImageDtoModelAssembler implements RepresentationModelAssembler<Imgu
     public EntityModel<ImgurImageDto> toModel(ImgurImageDto imageDto) {
         return EntityModel.of(
                 imageDto,
-                linkTo(methodOn(ImgurController.class).getImage(imageDto.imgurId())).withSelfRel(),
+                linkTo(methodOn(ImgurController.class).getImage(null, imageDto.imgurId())).withSelfRel(),
                 linkTo(methodOn(ImgurController.class)
                         .uploadImage(null, null, null))
                         .withRel("imgurUpload"),

@@ -1,5 +1,6 @@
 package me.mppombo.synchronyapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -26,10 +27,14 @@ public class ApiUser {
     private Long id;
 
     private String username;
+
+    @JsonIgnore
     private String password;
     private String email;
     private String firstName;
     private String lastName;
+
+    private String role;
 
     @Override
     public String toString() {
@@ -38,7 +43,8 @@ public class ApiUser {
     }
 
     public static ApiUser fromRegisterDto(RegisterDto dto) {
-        return new ApiUser(0L, dto.username(), dto.email(), dto.firstName(), dto.lastName(), dto.password());
+        // the order of these items is VERY important
+        return new ApiUser(0L, dto.username(), dto.password(), dto.email(), dto.firstName(), dto.lastName(), "USER");
     }
 
     public ApiUserDto toDto() {

@@ -16,6 +16,6 @@ public class ImgurNotFoundModelAssembler
     // Send them back to /imgur/image to try again
     @Override
     public EntityModel<ImgurErrorDto> toModel(ImgurErrorDto body) {
-        return EntityModel.of(body, linkTo(methodOn(ImgurController.class).getImage("")).withRel("imgurGet"));
+        return EntityModel.of(body, linkTo(methodOn(ImgurController.class).getImage(null, "")).withRel("imgurGet"));
     }
 }

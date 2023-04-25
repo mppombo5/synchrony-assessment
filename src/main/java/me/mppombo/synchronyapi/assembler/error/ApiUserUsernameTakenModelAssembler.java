@@ -1,6 +1,6 @@
 package me.mppombo.synchronyapi.assembler.error;
 
-import me.mppombo.synchronyapi.controller.ApiUserController;
+import me.mppombo.synchronyapi.controller.AuthController;
 import me.mppombo.synchronyapi.dto.error.ApiUserErrorDto;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -18,6 +18,6 @@ public class ApiUserUsernameTakenModelAssembler
     public EntityModel<ApiUserErrorDto> toModel(ApiUserErrorDto body) {
         return EntityModel.of(body,
                 // passed null because it doesn't actually do anything, just gets the link to /register
-                linkTo(methodOn(ApiUserController.class).createUser(null)).withRel("register"));
+                linkTo(methodOn(AuthController.class).registerUser(null)).withRel("register"));
     }
 }

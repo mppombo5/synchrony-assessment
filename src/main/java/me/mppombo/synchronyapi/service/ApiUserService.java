@@ -1,5 +1,6 @@
 package me.mppombo.synchronyapi.service;
 
+import lombok.RequiredArgsConstructor;
 import me.mppombo.synchronyapi.exception.apiuser.ApiUserNotFoundException;
 import me.mppombo.synchronyapi.exception.apiuser.ApiUserUsernameTakenException;
 import me.mppombo.synchronyapi.model.ApiUser;
@@ -11,15 +12,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ApiUserService {
     private final static Logger logger = LoggerFactory.getLogger(ApiUserService.class);
 
     private final ApiUserRepository userRepository;
-
-    public ApiUserService(ApiUserRepository repo) {
-        this.userRepository = repo;
-    }
-
 
     // Returns a list of all currently registered users.
     public List<ApiUser> getAllRegisteredUsers() {
@@ -30,10 +27,19 @@ public class ApiUserService {
      * Queries and returns a single user object by ID.
      * Returns a 404 if a user with the specified ID does not exist.
      */
-    public ApiUser getSingleUser(Long id) {
+    public ApiUser getUserById(Long id) {
         ApiUser user = userRepository.findById(id)
-                .orElseThrow(() -> new ApiUserNotFoundException(id));
-        logger.info("Found user {}", user);
+                .orElseThrow(ApiUserNotFoundException::new);
+        logger.info("Found user {} in query by ID", user);
+
+        return user;
+    }
+
+    public ApiUser getUserByUsername(String username) {
+        logger.info("Request to find user '{}'", username);
+        ApiUser user = userRepository.findByUsername(username)
+                .orElseThrow(ApiUserNotFoundException::new);
+        logger.info("Found user {} in query by username", user);
 
         return user;
     }
