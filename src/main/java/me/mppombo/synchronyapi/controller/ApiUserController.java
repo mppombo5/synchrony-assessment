@@ -3,7 +3,7 @@ package me.mppombo.synchronyapi.controller;
 import jakarta.validation.Valid;
 import me.mppombo.synchronyapi.dto.RegisterDto;
 import me.mppombo.synchronyapi.dto.ApiUserDto;
-import me.mppombo.synchronyapi.models.ApiUser;
+import me.mppombo.synchronyapi.model.ApiUser;
 import me.mppombo.synchronyapi.service.ApiUserService;
 import me.mppombo.synchronyapi.assembler.ApiUserDtoModelAssembler;
 import org.slf4j.Logger;

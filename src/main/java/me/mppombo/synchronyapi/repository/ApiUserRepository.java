@@ -1,6 +1,6 @@
 package me.mppombo.synchronyapi.repository;
 
-import me.mppombo.synchronyapi.models.ApiUser;
+import me.mppombo.synchronyapi.model.ApiUser;
 import org.springframework.data.repository.ListCrudRepository;
 
 import java.util.List;

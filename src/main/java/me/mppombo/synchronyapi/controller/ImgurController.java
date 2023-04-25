@@ -3,7 +3,7 @@ package me.mppombo.synchronyapi.controller;
 import me.mppombo.synchronyapi.assembler.ImageDtoModelAssembler;
 import me.mppombo.synchronyapi.dto.ImgurImageDto;
 import me.mppombo.synchronyapi.dto.ImgurDeleteDto;
-import me.mppombo.synchronyapi.models.ImgurImage;
+import me.mppombo.synchronyapi.model.ImgurImage;
 import me.mppombo.synchronyapi.service.ImgurService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

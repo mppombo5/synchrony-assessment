@@ -1,4 +1,4 @@
-package me.mppombo.synchronyapi.models;
+package me.mppombo.synchronyapi.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -3,7 +3,7 @@ package me.mppombo.synchronyapi.service;
 import me.mppombo.synchronyapi.dto.imgur.DeleteOkDto;
 import me.mppombo.synchronyapi.dto.imgur.PostOkDto;
 import me.mppombo.synchronyapi.dto.imgur.GetOkDto;
-import me.mppombo.synchronyapi.models.ImgurImage;
+import me.mppombo.synchronyapi.model.ImgurImage;
 import me.mppombo.synchronyapi.repository.ImgurImageRepository;
 import me.mppombo.synchronyapi.utility.ImgurHelper;
 import org.slf4j.Logger;

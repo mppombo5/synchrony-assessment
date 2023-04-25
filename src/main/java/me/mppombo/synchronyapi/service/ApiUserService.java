@@ -2,7 +2,7 @@ package me.mppombo.synchronyapi.service;
 
 import me.mppombo.synchronyapi.exception.apiuser.ApiUserNotFoundException;
 import me.mppombo.synchronyapi.exception.apiuser.ApiUserUsernameTakenException;
-import me.mppombo.synchronyapi.models.ApiUser;
+import me.mppombo.synchronyapi.model.ApiUser;
 import me.mppombo.synchronyapi.repository.ApiUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
