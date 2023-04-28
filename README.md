@@ -58,3 +58,11 @@ It will reply with a JWT access token which you must send as an authorization he
     "accessToken": "somelongandveryhardtoreadstringofnumbersandletters"
 }
 ```
+
+### The Users Endpoint
+
+You can also query for user information without authorization. To get an aggregate of all user data, send a `GET` request to `/users`. To get the data for a user with a specific ID, send a `GET` request to `/users/{id}`.
+
+### The Imgur Endpoint
+
+This is where you can upload, view, and delete images.
